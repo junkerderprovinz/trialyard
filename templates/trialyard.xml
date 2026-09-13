@@ -4,7 +4,7 @@
   <Repository>junkerderprovinz/trialyard:latest</Repository>
   <Registry/>
   <Network>br0.20</Network>
-  <MyIP>192.168.20.67</MyIP>
+  <MyIP/>
   <MyMAC/>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
