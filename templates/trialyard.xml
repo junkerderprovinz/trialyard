@@ -1,21 +1,22 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>TrialYard</Name>
-  <Repository>junkerderprovinz/trialyard:latest</Repository>
-  <Registry/>
+  <Repository>ghcr.io/junkerderprovinz/trialyard:latest</Repository>
+  <Registry>https://github.com/junkerderprovinz/trialyard/pkgs/container/trialyard</Registry>
   <Network>br0.20</Network>
   <MyIP/>
   <MyMAC/>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
-  <Support/>
-  <Project/>
-  <ReadMe/>
+  <Support>https://github.com/junkerderprovinz/trialyard/issues</Support>
+  <Project>https://github.com/junkerderprovinz/trialyard</Project>
+  <ReadMe>https://github.com/junkerderprovinz/trialyard/blob/main/README.md</ReadMe>
   <Overview>&#13;
-    INTERNAL-ONLY. Not a published junkerderprovinz app &#x2013; no public repo,&#13;
-    no CA listing. Permanent, general-purpose GPU-accelerated test/dev sandbox&#13;
-    on real hardware, built on Selkies for a full web desktop (not just a bare&#13;
-    browser tab).&#13;
+    A trial yard is the walled ground a smith keeps beside the forge: the place&#13;
+    where a blade gets swung at something breakable, on purpose, before anyone&#13;
+    carries it. A permanent, GPU-accelerated test and development sandbox on&#13;
+    real hardware, built on Selkies for a full web desktop rather than a bare&#13;
+    browser tab.&#13;
     &#13;
     Exists so future testing (Selkies PR/e2e work needing a real browser + GPU,&#13;
     and other ad-hoc dev/testing needs) can happen without touching production&#13;
@@ -47,8 +48,8 @@
   </Overview>
   <Category>Tools: Development:</Category>
   <WebUI>https://[IP]:[PORT:3001]/</WebUI>
-  <TemplateURL/>
-  <Icon>file:///boot/config/plugins/dockerMan/icons/trialyard.png</Icon>
+  <TemplateURL>https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/templates/trialyard.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/icon.png</Icon>
   <ExtraParams>--restart=unless-stopped --shm-size=1gb --runtime=nvidia --cpus="4" --memory="6g"</ExtraParams>
   <PostArgs/>
   <CPUset/>
