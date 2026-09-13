@@ -1,8 +1,19 @@
-<h1 align="center">TrialYard</h1>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/trialyard-banner-dark.png">
+    <img src="https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/trialyard-banner.png" alt="TrialYard" width="100%">
+  </picture>
+</p>
 
 <p align="center">
-  <img src="assets/icon.png" width="128" alt="TrialYard">
+  <a href="https://github.com/selkies-project/selkies"><img src="https://img.shields.io/badge/Selkies-WebRTC-393939?style=for-the-badge&logo=webrtc&logoColor=white" alt="Selkies" height="36"></a>&nbsp;
+  <a href="https://www.nvidia.com"><img src="https://img.shields.io/badge/GPU-NVIDIA-76b900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA GPU" height="36"></a>&nbsp;
+  <a href="templates/trialyard.xml"><img src="https://img.shields.io/badge/Unraid-Template-f15a2c?style=for-the-badge&logo=unraid&logoColor=white" alt="Unraid Template" height="36"></a>&nbsp;
+  <a href="https://github.com/junkerderprovinz/trialyard/releases/latest"><img src="https://img.shields.io/github/v/release/junkerderprovinz/trialyard?style=for-the-badge&logo=github&logoColor=white&label=Release" alt="Release" height="36"></a>&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue?style=for-the-badge&logo=gnu&logoColor=white" alt="License: AGPL-3.0" height="36"></a>
 </p>
+
+<br>
 
 <p align="center">
   A permanent GPU-accelerated desktop that exists to be tested in, so no experiment ever needs a production container or the host.
