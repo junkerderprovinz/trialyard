@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TrialYard: ein mittelalterlicher Pranger.
+
+  Farbgebung wie beim Strohritter: Hausgold als Holz, Braun als Schatten und
+  Kontur. Das Gold laeuft von oben hell nach unten dunkel, damit die Bretter
+  Tiefe bekommen statt flach zu liegen; die Pfosten stehen einen Ton dunkler,
+  weil sie hinter den Brettern sitzen.
+
+  Die drei Kreise sind die OEFFNUNGEN fuer Kopf und Haende, nicht Fuellung.
+  Sie stehen deshalb in tiefem Braun: auf hellem Grund lesen sie als Loch, auf
+  dunklem verschwinden sie darin, was dasselbe Loch ist.
+
+  Die viewBox ist gegenueber der Vorlage ringsum um 28 Einheiten erweitert, weil
+  die Bretter sonst die Kante beruehren und angeschnitten wirken.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-28 -28 513.26 568">
+  <defs>
+    <linearGradient id="holz" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2d84e"/>
+      <stop offset="0.55" stop-color="#e0bf00"/>
+      <stop offset="1" stop-color="#c09a00"/>
+    </linearGradient>
+    <linearGradient id="pfosten" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d9b400"/>
+      <stop offset="1" stop-color="#a98300"/>
+    </linearGradient>
+  </defs>
+
+  <g id="trialyard" stroke="#532d10" stroke-width="7" stroke-linejoin="round">
+    <!-- Bretter -->
+    <g fill="url(#holz)">
+      <path d="M457.26,64.59v48.05l-195.96.02c-19.68-14.31-44.89-14.36-64.55,0l-196.75-.02v-48.05h457.26Z"/>
+      <path d="M457.26,194.17v48.05H0v-48.05l196.75-.02c19.48,14.58,45.04,14.42,64.55,0l195.96.02Z"/>
+      <path d="M0,129.58h44.5c-10.01,14.2-10.05,33.45,0,47.65H0s0-47.65,0-47.65Z"/>
+      <path d="M457.26,129.58v47.66h-43.72c10.08-14.26,9.9-33.37,0-47.65h43.72Z"/>
+      <path d="M183.14,129.58c-7.71,14.89-7.77,32.78,0,47.66h-72.07c10.09-14.22,9.93-33.39,0-47.66h72.07Z"/>
+      <path d="M346.58,129.58c-1.2,3.07-3.2,5.7-4.4,8.79-5.11,13.09-2.96,27.15,4.4,38.87h-71.68c7.68-14.96,7.58-32.69,0-47.66h71.68Z"/>
+      <rect x="75.22" y="393.06" width="307.59" height="17.75"/>
+    </g>
+
+    <!-- Pfosten, einen Ton dunkler, weil sie hinter den Brettern stehen -->
+    <g fill="url(#pfosten)">
+      <path d="M425.75,0l.38,47.47c-.6.96-.83.19-.97.19h-24.81c-.09,0-.3.44-.6.23l-.39-47.88h26.39Z"/>
+      <path d="M58.29,0l.4,47.65c-8.86-.01-17.89.05-26.78,0l.39-47.65h25.99Z"/>
+      <polygon points="399.75 512 399.36 259.15 425.75 259.15 425.35 512 399.75 512"/>
+      <polygon points="58.68 512 32.3 512 32.3 259.15 58.09 259.15 58.68 512"/>
+    </g>
+
+    <!-- Oeffnungen -->
+    <g fill="#2a1608">
+      <circle cx="228.98" cy="153.45" r="34.74"/>
+      <circle cx="77.77" cy="153.45" r="23.93"/>
+      <circle cx="380.22" cy="153.44" r="23.92"/>
+    </g>
+  </g>
+</svg>

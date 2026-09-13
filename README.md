@@ -41,6 +41,20 @@ If it has earned a place on your computer or server, a donation covers what it c
 
 <br>
 
+## Table of Contents
+
+1. [What it is](#1-what-it-is)
+2. [Screenshots](#2-screenshots)
+3. [Why it exists](#3-why-it-exists)
+4. [The rule](#4-the-rule)
+5. [What is inside](#5-what-is-inside)
+6. [Things learned the hard way](#6-things-learned-the-hard-way)
+7. [Building and running it](#7-building-and-running-it)
+8. [Why this repo exists at all](#8-why-this-repo-exists-at-all)
+9. [Support this project](#9-support-this-project)
+
+<br>
+
 ## 1. What it is
 
 A trial yard is the walled ground a smith keeps beside the forge: the place where a blade gets swung at something breakable, on purpose, before anyone carries it.
@@ -51,7 +65,19 @@ No Community Applications listing and no Docker Hub mirror: this one is built an
 
 <br>
 
-## 2. Why it exists
+## 2. Screenshots
+
+<p align="center">
+  <img src=".github/assets/screenshots/desktop.png" alt="Google Chrome on the TrialYard desktop, in a browser tab" width="100%">
+</p>
+
+<p align="center">
+  <sub>Chrome running on the desktop, seen through a browser tab. The desktop is the thing in the tab, and the browser inside it is real.</sub>
+</p>
+
+<br>
+
+## 3. Why it exists
 
 A background test agent for [selkies-project/selkies#305](https://github.com/selkies-project/selkies/pull/305) reported back that it had "no browser or GPU on my box", while two machines with GPUs sat in the same house. The gap was not hardware, it was that nothing was standing ready to be used.
 
@@ -59,7 +85,7 @@ So something is. A headful click, a pointer lock, a hardware decode, a screensho
 
 <br>
 
-## 3. The rule
+## 4. The rule
 
 **Every test runs here first.** No ad-hoc test containers.
 
@@ -67,7 +93,7 @@ Only the thing under test gets a container of its own; the client that pokes at 
 
 <br>
 
-## 4. What is inside
+## 5. What is inside
 
 | | |
 |---|---|
@@ -83,7 +109,7 @@ The mount list is short on purpose: the sandbox cannot reach production data, be
 
 <br>
 
-## 5. Things learned the hard way
+## 6. Things learned the hard way
 
 Each of these cost a diagnosis once. They are here so they cost nothing the second time.
 
@@ -105,7 +131,7 @@ Each of these cost a diagnosis once. They are here so they cost nothing the seco
 
 <br>
 
-## 6. Building and running it
+## 7. Building and running it
 
 ```sh
 docker build -t junkerderprovinz/trialyard:latest .
@@ -122,7 +148,7 @@ php /usr/local/emhttp/plugins/dynamix.docker.manager/scripts/rebuild_container T
 
 <br>
 
-## 7. Why this repo exists at all
+## 8. Why this repo exists at all
 
 It did not, until 2026-09-13. The source lived as a folder on the array, with no
 history and no diff, which is one careless overwrite away from being
@@ -135,7 +161,7 @@ lives.
 
 <br>
 
-## 8. Support this project
+## 9. Support this project
 
 Problems, wishes or suggestions? You're welcome to [open an issue](https://github.com/junkerderprovinz/trialyard/issues).
 

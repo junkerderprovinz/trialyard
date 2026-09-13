@@ -38,9 +38,17 @@ export GDK_BACKEND="${GDK_BACKEND:-x11}"
 # auto-launched app, which would not). Falls back to a flat xsetroot fill if
 # feh or the wallpaper asset is ever missing, so a stripped-down rebuild
 # still gets a sane (if hint-less) background instead of an X error.
+#
+# --bg-max, not --bg-fill. Selkies resizes the desktop to whatever the browser
+# window is, so the ratio is never the image's. With --bg-fill the first README
+# screenshot showed the hint twice, side by side, because the scaled image no
+# longer covered the root window and what was left got repeated. --bg-max fits
+# the whole image and pays for the leftover with --image-bg, the same colour as
+# the fallback below, so the seam is invisible.
+xsetroot -solid '#161616' 2>/dev/null || true
 if command -v feh >/dev/null 2>&1 && [ -f /usr/local/share/trialyard-wallpaper.png ]; then
-    feh --no-fehbg --bg-fill /usr/local/share/trialyard-wallpaper.png 2>/dev/null \
-        || xsetroot -solid '#161616' 2>/dev/null || true
+    feh --no-fehbg --bg-max --image-bg '#161616' \
+        /usr/local/share/trialyard-wallpaper.png 2>/dev/null || true
 else
     xsetroot -solid '#161616' 2>/dev/null || true
 fi
