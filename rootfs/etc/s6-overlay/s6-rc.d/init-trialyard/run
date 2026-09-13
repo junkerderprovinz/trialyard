@@ -1,0 +1,45 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+# -----------------------------------------------------------------------------
+# init-trialyard — config bootstrap for the general-purpose desktop
+# -----------------------------------------------------------------------------
+# Runs as an s6-rc oneshot AFTER init-selkies-config (dependencies.d), because
+# that base oneshot seeds /config/.config/openbox/{autostart,menu.xml} from
+# /defaults on first boot only. Force-refresh autostart on EVERY start here so
+# an image update to /defaults/autostart always takes effect (menu.xml is
+# deliberately left as first-boot-only — see /defaults/menu.xml's own note).
+# -----------------------------------------------------------------------------
+set -e
+
+log() { echo "[init-trialyard] $*"; }
+
+CONFIG_HOME="/config/.config"
+mkdir -p "${CONFIG_HOME}/openbox" \
+         "/config/.local/share" \
+         "/config/.cache" \
+         "/config/npm-global" \
+         "/config/go"
+
+cp -af /defaults/autostart "${CONFIG_HOME}/openbox/autostart"
+chmod 0755 "${CONFIG_HOME}/openbox/autostart"
+log "autostart synced from /defaults/autostart"
+
+chown -R "${PUID:-99}:${PGID:-100}" \
+    "${CONFIG_HOME}" "/config/.local" "/config/.cache" \
+    "/config/npm-global" "/config/go" 2>/dev/null || true
+
+# GPU diagnostics — logged once at boot so a failed GPU passthrough (wrong
+# --runtime, missing NVIDIA_VISIBLE_DEVICES) is visible in `docker logs`
+# instead of silently falling back to software rendering.
+if command -v nvidia-smi >/dev/null 2>&1; then
+    if gpu_name=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null); then
+        log "GPU detected: ${gpu_name}"
+    else
+        log "WARNING: nvidia-smi is present but failed to query the GPU — check --runtime=nvidia and NVIDIA_VISIBLE_DEVICES on this container"
+    fi
+else
+    log "WARNING: nvidia-smi not found in PATH — GPU passthrough is not active for this container"
+fi
+
+log "init-trialyard done"
+exit 0

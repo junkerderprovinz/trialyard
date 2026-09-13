@@ -1,0 +1,50 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+# -----------------------------------------------------------------------------
+# svc-trialyard-ready — print a loud "READY" banner once the Selkies WebUI
+# actually serves, so the user knows the desktop is reachable. House standard:
+# every own-image container prints an "<APP> IS READY" line as the LAST block
+# of the container log.
+# -----------------------------------------------------------------------------
+FLAG="/run/trialyard-ready.printed"
+
+# /run is tmpfs (wiped on every container start) -> the banner prints once per start.
+if [[ -f "${FLAG}" ]]; then
+    exec sleep infinity
+fi
+
+# Wait for the Selkies WebUI (nginx) to accept connections on its internal
+# HTTP port (3000 is always served regardless of the HTTPS preference).
+ready=0
+for _ in $(seq 1 150); do
+    if (exec 3<>/dev/tcp/127.0.0.1/3000) 2>/dev/null; then
+        exec 3>&- 3<&-
+        ready=1
+        break
+    fi
+    sleep 2
+done
+
+gpu="no GPU"
+if command -v nvidia-smi >/dev/null 2>&1; then
+    name=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || true)
+    [[ -n "${name}" ]] && gpu="${name}"
+fi
+
+/usr/local/bin/print-banner.sh "TrialYard" "GPU test/dev sandbox · Selkies · ${gpu}" 2>/dev/null || true
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+if [[ "${ready}" -eq 1 ]]; then
+    echo -e "  ${GREEN}✓ TRIALYARD IS READY${NC} - Open the WebUI via HTTPS on port ${CUSTOM_HTTPS_PORT:-3001}"
+    echo "    GPU: ${gpu}"
+else
+    echo -e "  ${RED}✗ TRIALYARD DID NOT BECOME READY${NC} - The WebUI never answered within 5 minutes, check the log above"
+fi
+echo ""
+
+touch "${FLAG}"
+# Longrun: stay up so s6 does not restart us and re-print the banner.
+exec sleep infinity

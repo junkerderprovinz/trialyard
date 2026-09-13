@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>TrialYard</Name>
+  <Repository>junkerderprovinz/trialyard:latest</Repository>
+  <Registry/>
+  <Network>br0.20</Network>
+  <MyIP>192.168.20.67</MyIP>
+  <MyMAC/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support/>
+  <Project/>
+  <ReadMe/>
+  <Overview>&#13;
+    INTERNAL-ONLY. Not a published junkerderprovinz app &#x2013; no public repo,&#13;
+    no CA listing. Permanent, general-purpose GPU-accelerated test/dev sandbox&#13;
+    on real hardware, built on Selkies for a full web desktop (not just a bare&#13;
+    browser tab).&#13;
+    &#13;
+    Exists so future testing (Selkies PR/e2e work needing a real browser + GPU,&#13;
+    and other ad-hoc dev/testing needs) can happen without touching production&#13;
+    containers or the host directly.&#13;
+    &#13;
+    What's inside:&#13;
+    &#x2022; Firefox AND Google Chrome (cross-browser testing)&#13;
+    &#x2022; Terminal (xterm), git, curl, build-essential/gcc&#13;
+    &#x2022; Python 3 + pip, Node.js 24, Go 1.26&#13;
+    &#x2022; Playwright's OS-level browser dependencies (install-deps) &#x2013; Firefox/&#13;
+      Chrome above cover the actual browser binaries, so Playwright's own&#13;
+      bundled-browser download is skipped to keep the image lean&#13;
+    &#13;
+    GPU: RTX 4070 Ti SUPER, wired with the exact pattern proven on this box's&#13;
+    HandBrake container (--runtime=nvidia + NVIDIA_VISIBLE_DEVICES +&#13;
+    NVIDIA_DRIVER_CAPABILITIES). Verify anytime with:&#13;
+    docker exec TrialYard nvidia-smi&#13;
+    &#13;
+    Resource caps (host RAM is tight with 30+ other containers running):&#13;
+    --cpus=4 --memory=6g via Extra Parameters. This container sits idle most&#13;
+    of the time; the cap only stops an active browser/build session from&#13;
+    starving everything else.&#13;
+    &#13;
+    WebUI opens via HTTPS on port 3001 (self-signed cert &#x2014; accept it once).&#13;
+    Auth: leave "WebUI Username" and "Password" EMPTY to run without login.&#13;
+    &#13;
+    /config is the ONLY persistent mount by design &#x2014; this sandbox does not&#13;
+    get blanket access to /mnt shares, keeping it isolated from production data.&#13;
+  </Overview>
+  <Category>Tools: Development:</Category>
+  <WebUI>https://[IP]:[PORT:3001]/</WebUI>
+  <TemplateURL/>
+  <Icon>file:///boot/config/plugins/dockerMan/icons/trialyard.png</Icon>
+  <ExtraParams>--restart=unless-stopped --shm-size=1gb --runtime=nvidia --cpus="4" --memory="6g"</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>1789037218</DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI Port (HTTPS / Selkies)" Target="3001" Default="3001" Mode="tcp" Description="HTTPS port of the Selkies WebUI (self-signed cert). This is the default WebUI &#x2014; HTTPS is required for clipboard support in the browser. Accept the self-signed certificate once." Type="Port" Display="always" Required="true" Mask="false">3001</Config>
+  <Config Name="WebUI Port (HTTP / Selkies)" Target="3000" Default="3000" Mode="tcp" Description="HTTP port of the Selkies WebUI. Optional fallback &#x2014; the WebUI defaults to HTTPS (3001) because browsers only allow seamless clipboard over HTTPS." Type="Port" Display="always" Required="false" Mask="false">3000</Config>
+  <Config Name="AppData (/config)" Target="/config" Default="/mnt/user/appdata/trialyard" Mode="rw" Description="Persistent desktop/dev-tool state: openbox config, Firefox/Chrome profiles, GOPATH (/config/go), npm global prefix (/config/npm-global). The ONLY persistent mount on purpose &#x2014; this sandbox does not get blanket access to /mnt shares." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/trialyard</Config>
+  <Config Name="GPU: NVIDIA_VISIBLE_DEVICES" Target="NVIDIA_VISIBLE_DEVICES" Default="all" Mode="" Description="Which GPU(s) the NVIDIA Container Runtime exposes inside the container. 'all' matches this box's confirmed-working HandBrake/Ollama pattern. Requires --runtime=nvidia (already set in Extra Parameters)." Type="Variable" Display="always" Required="true" Mask="false">all</Config>
+  <Config Name="GPU: NVIDIA_DRIVER_CAPABILITIES" Target="NVIDIA_DRIVER_CAPABILITIES" Default="compute,video,utility" Mode="" Description="Driver capability set exposed to the container. compute,video,utility matches this box's confirmed-working HandBrake container exactly (nvidia-smi + desktop GL/zink acceleration + NVENC/NVDEC)." Type="Variable" Display="always" Required="true" Mask="false">compute,video,utility</Config>
+  <Config Name="WebUI Username" Target="CUSTOM_USER" Default="" Mode="" Description="Optional. Username for HTTP-basic-auth on the WebUI. Leave EMPTY together with the password for no login. Set both fields to enable login (recommended outside trusted LANs)." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="WebUI Password" Target="PASSWORD" Default="" Mode="" Description="Optional. Password for HTTP-basic-auth on the WebUI. Leave EMPTY together with the username for no login." Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="Keyboard Layout (KEYBOARD_LAYOUT)" Target="KEYBOARD_LAYOUT" Default="us" Mode="" Description="X11 keyboard layout for the streamed desktop (e.g. us, de)." Type="Variable" Display="always" Required="false" Mask="false">de</Config>
+  <Config Name="Timezone (TZ)" Target="TZ" Default="Europe/Vienna" Mode="" Description="Container timezone (log timestamps, file mtimes)." Type="Variable" Display="always" Required="false" Mask="false">Europe/Vienna</Config>
+  <Config Name="User ID (PUID)" Target="PUID" Default="99" Mode="" Description="User-ID the desktop session runs as. Default 99 (nobody on Unraid)." Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
+  <Config Name="Group ID (PGID)" Target="PGID" Default="100" Mode="" Description="Group-ID. Default 100 (users on Unraid)." Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+  <Config Name="UMASK" Target="UMASK" Default="022" Mode="" Description="Permission mask for newly created files." Type="Variable" Display="advanced" Required="false" Mask="false">022</Config>
+  <TailscaleStateDir/>
+</Container>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TrialYard's openbox right-click menu. Seeded into
+     /config/.config/openbox/menu.xml on FIRST boot only (base image's
+     init-selkies-config: `if [[ ! -f "$CONF_DIR/menu.xml" ]]`) — edit this
+     file and it takes effect on a fresh /config; an existing /config keeps
+     whatever menu is already there (including hand edits jdp makes later). -->
+
+<openbox_menu xmlns="http://openbox.org/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://openbox.org/
+                file:///usr/share/openbox/menu.xsd">
+
+<menu id="root-menu" label="TrialYard">
+  <item label="Terminal">
+    <action name="Execute"><execute>xterm</execute></action>
+  </item>
+  <item label="Firefox">
+    <action name="Execute"><execute>firefox</execute></action>
+  </item>
+  <item label="Google Chrome">
+    <action name="Execute"><execute>/usr/local/bin/chrome-launch</execute></action>
+  </item>
+  <separator />
+  <item label="Reconfigure">
+    <action name="Reconfigure" />
+  </item>
+  <item label="Restart">
+    <action name="Restart" />
+  </item>
+</menu>
+
+</openbox_menu>
