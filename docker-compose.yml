@@ -1,0 +1,47 @@
+# TrialYard, ready to run.
+#
+#   docker compose up -d
+#
+# Then open https://<this-host>:3001/ and accept the self-signed certificate
+# once. Right-click the desktop for a terminal, Firefox or Google Chrome.
+
+services:
+  trialyard:
+    image: ghcr.io/junkerderprovinz/trialyard:latest
+    container_name: TrialYard
+
+    environment:
+      # 99:100 is Unraid's nobody:users. On a plain Linux box, use your own:
+      #   id -u  /  id -g
+      PUID: "99"
+      PGID: "100"
+      TZ: "Europe/Vienna"
+      KEYBOARD_LAYOUT: "us"
+      # An NVIDIA card, exposed through the nvidia container runtime. Drop
+      # this block and the runtime line below to run without one: the desktop
+      # still works, it just draws in software.
+      NVIDIA_VISIBLE_DEVICES: "all"
+      NVIDIA_DRIVER_CAPABILITIES: "compute,video,utility"
+
+    runtime: nvidia
+
+    ports:
+      - "3001:3001"   # the desktop, over HTTPS
+      # - "3000:3000" # optional HTTP fallback
+
+    volumes:
+      # The only persistent mount by design, and that is the point: the
+      # sandbox cannot reach production data, because it was never handed a
+      # path to it. GOPATH and the npm global prefix live in here, so a
+      # rebuild keeps them.
+      - ./config:/config
+
+    shm_size: "1gb"
+
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 6g
+
+    restart: unless-stopped

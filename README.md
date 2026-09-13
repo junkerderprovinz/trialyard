@@ -23,13 +23,11 @@
 <br>
 
 <p align="center">
-  <a href="https://github.com/junkerderprovinz/trialyard/pkgs/container/trialyard"><img src="https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/download-buttons/docker-image.svg" alt="Pull the container image from GHCR" width="195"></a>
+  <a href="https://github.com/junkerderprovinz/trialyard/releases/latest/download/docker-compose.yml"><img src="https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/download-buttons/docker-image.svg" alt="Download the docker-compose file" width="195"></a>
   &nbsp;
-  <a href="https://github.com/junkerderprovinz/trialyard/releases/latest"><img src="https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/download-buttons/source-zip.svg" alt="Download the source archive" width="195"></a>
-</p>
-
-<p align="center">
-  <sub>Always the newest release &middot; <code>docker pull ghcr.io/junkerderprovinz/trialyard:latest</code> &middot; on Unraid, use the template instead.</sub>
+  <a href="https://github.com/junkerderprovinz/trialyard/archive/refs/heads/main.zip"><img src="https://raw.githubusercontent.com/junkerderprovinz/trialyard/main/.github/assets/download-buttons/source-zip.svg" alt="Download the source archive" width="195"></a>
+  <br>
+  <sub>Both download on click &middot; the image itself: <code>docker pull ghcr.io/junkerderprovinz/trialyard:latest</code> &middot; on Unraid, use the template.</sub>
 </p>
 
 <p align="center">
