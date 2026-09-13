@@ -6,6 +6,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/junkerderprovinz/trialyard/actions/workflows/build.yml"><img src="https://img.shields.io/github/actions/workflow/status/junkerderprovinz/trialyard/build.yml?branch=main&label=Build&style=for-the-badge&logo=githubactions&logoColor=white" alt="Build" height="36"></a>&nbsp;
   <a href="https://github.com/selkies-project/selkies"><img src="https://img.shields.io/badge/Selkies-WebRTC-393939?style=for-the-badge&logo=webrtc&logoColor=white" alt="Selkies" height="36"></a>&nbsp;
   <a href="https://www.nvidia.com"><img src="https://img.shields.io/badge/GPU-NVIDIA-76b900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA GPU" height="36"></a>&nbsp;
   <a href="templates/trialyard.xml"><img src="https://img.shields.io/badge/Unraid-Template-f15a2c?style=for-the-badge&logo=unraid&logoColor=white" alt="Unraid Template" height="36"></a>&nbsp;
@@ -60,8 +61,6 @@ If it has earned a place on your computer or server, a donation covers what it c
 A trial yard is the walled ground a smith keeps beside the forge: the place where a blade gets swung at something breakable, on purpose, before anyone carries it.
 
 This container is a full [Selkies](https://github.com/selkies-project/selkies) desktop with a real GPU, a real Firefox and a real Google Chrome, and a working toolchain. It runs permanently on its own address on the LAN, and it is where every test that needs a browser, a screen or a graphics card is run.
-
-No Community Applications listing and no Docker Hub mirror: this one is built and run on the server it lives on. The source is here because a container image whose build context exists in exactly one folder is one careless overwrite away from being unreconstructible.
 
 <br>
 
@@ -133,8 +132,16 @@ Each of these cost a diagnosis once. They are here so they cost nothing the seco
 
 ## 7. Building and running it
 
+Pull it:
+
 ```sh
-docker build -t junkerderprovinz/trialyard:latest .
+docker pull ghcr.io/junkerderprovinz/trialyard:latest
+```
+
+Or build it yourself:
+
+```sh
+docker build -t ghcr.io/junkerderprovinz/trialyard:latest .
 ```
 
 The container itself is created and rebuilt through its Unraid template
