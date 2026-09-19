@@ -1,9 +1,6 @@
 #!/bin/sh
-# Google Chrome inside an unprivileged container: Chrome's own SUID sandbox
-# helper needs privileges this container does not (and should not) have.
-# --no-sandbox is the standard, expected way to run Chrome in a container
-# that is already the isolation boundary (same approach Selenium/Playwright
-# container images use). --disable-dev-shm-usage is not needed here — the
-# container is started with --shm-size=1gb, which is plenty for Chrome's tab
-# compositing.
+# Chrome's SUID sandbox helper needs privileges this unprivileged container does
+# not have, and the container is already the isolation boundary, as in the
+# Selenium and Playwright images. --disable-dev-shm-usage is not needed since
+# the container runs with --shm-size=1gb.
 exec google-chrome-stable --no-sandbox "$@"

@@ -1,20 +1,15 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
-# -----------------------------------------------------------------------------
-# svc-trialyard-ready — print a loud "READY" banner once the Selkies WebUI
-# actually serves, so the user knows the desktop is reachable. House standard:
-# every own-image container prints an "<APP> IS READY" line as the LAST block
-# of the container log.
-# -----------------------------------------------------------------------------
+# Prints the "READY" banner to the container log once the WebUI serves, so the
+# user can tell the desktop is reachable.
 FLAG="/run/trialyard-ready.printed"
 
-# /run is tmpfs (wiped on every container start) -> the banner prints once per start.
+# /run is a tmpfs, so the banner prints once per container start.
 if [[ -f "${FLAG}" ]]; then
     exec sleep infinity
 fi
 
-# Wait for the Selkies WebUI (nginx) to accept connections on its internal
-# HTTP port (3000 is always served regardless of the HTTPS preference).
+# Port 3000 is served whatever the user's HTTPS preference. Waits up to 5 minutes.
 ready=0
 for _ in $(seq 1 150); do
     if (exec 3<>/dev/tcp/127.0.0.1/3000) 2>/dev/null; then
@@ -46,5 +41,5 @@ fi
 echo ""
 
 touch "${FLAG}"
-# Longrun: stay up so s6 does not restart us and re-print the banner.
+# A longrun that exits would be restarted by s6 and print the banner again.
 exec sleep infinity

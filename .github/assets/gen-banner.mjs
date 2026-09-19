@@ -1,14 +1,11 @@
 /**
- * Banner fuer TrialYard, hell und dunkel.
+ * Generates the light and dark TrialYard banners, 1600x500, on the pattern of
+ * glimstone's gen-banner.mjs: the mark on the left, the name in Bree Serif and
+ * the claim in Lato. Text is turned into SVG paths with opentype.js so the
+ * banner looks the same everywhere without a font.
  *
- * Nach demselben Muster wie glimstones gen-banner.mjs: 1600 auf 500, Marke
- * links, Name in Bree Serif, Claim in Lato. Der Text wird ueber opentype.js in
- * SVG-Pfade gewandelt, damit das SVG ohne Schrift auskommt und ueberall gleich
- * aussieht. Ein Banner, das erst beim Betrachter eine Schrift sucht, sieht bei
- * jedem anders aus.
- *
- * Deps (global): opentype.js, @resvg/resvg-js. Die Schriften werden einmal in
- * das Temp-Verzeichnis geladen.
+ * Deps (global): opentype.js, @resvg/resvg-js. The fonts are downloaded once to
+ * the temp dir.
  *
  *   node .github/assets/gen-banner.mjs
  */
@@ -40,19 +37,19 @@ const THEMES = [
   { suffix: "-dark", bg: "#0d1117", name: "#e6edf3", claim: "#9aa4ad" },
 ];
 
-async function laden(datei, url) {
-  const p = join(tmpdir(), datei);
+async function loadFont(file, url) {
+  const p = join(tmpdir(), file);
   if (!existsSync(p)) {
     const r = await fetch(url);
-    if (!r.ok) throw new Error(`font fetch ${r.status} fuer ${datei}`);
+    if (!r.ok) throw new Error(`font fetch ${r.status} for ${file}`);
     writeFileSync(p, Buffer.from(await r.arrayBuffer()));
   }
   return opentype.parse(readFileSync(p));
 }
 
-const font = await laden("Haus-BreeSerif-Regular.ttf",
+const font = await loadFont("Haus-BreeSerif-Regular.ttf",
   "https://github.com/google/fonts/raw/main/ofl/breeserif/BreeSerif-Regular.ttf");
-const claimFont = await laden("Haus-Lato-Regular.ttf",
+const claimFont = await loadFont("Haus-Lato-Regular.ttf",
   "https://github.com/google/fonts/raw/main/ofl/lato/Lato-Regular.ttf");
 
 const startX = 165;
@@ -101,9 +98,9 @@ for (const t of THEMES) {
   <g fill="${t.claim}">${textGroups(claimFont, CLAIM, claimSize, textX, claimBaseline)}</g>
 </svg>
 `;
-  const basis = `${SLUG}-banner${t.suffix}`;
-  writeFileSync(join(__dir, `${basis}.svg`), svg);
-  writeFileSync(join(__dir, `${basis}.png`),
+  const base = `${SLUG}-banner${t.suffix}`;
+  writeFileSync(join(__dir, `${base}.svg`), svg);
+  writeFileSync(join(__dir, `${base}.png`),
     new Resvg(svg, { background: t.bg, fitTo: { mode: "width", value: W } }).render().asPng());
-  console.log(`wrote ${basis}.svg + .png`);
+  console.log(`wrote ${base}.svg + .png`);
 }

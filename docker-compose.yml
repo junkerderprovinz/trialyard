@@ -30,10 +30,9 @@ services:
       # - "3000:3000" # optional HTTP fallback
 
     volumes:
-      # The only persistent mount by design, and that is the point: the
-      # sandbox cannot reach production data, because it was never handed a
-      # path to it. GOPATH and the npm global prefix live in here, so a
-      # rebuild keeps them.
+      # The only persistent mount, so the sandbox has no path to production
+      # data. GOPATH and the npm global prefix live in here, so a rebuild
+      # keeps them.
       - ./config:/config
 
     shm_size: "1gb"

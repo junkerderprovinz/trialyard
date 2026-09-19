@@ -1,14 +1,9 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
-# -----------------------------------------------------------------------------
-# init-trialyard — config bootstrap for the general-purpose desktop
-# -----------------------------------------------------------------------------
-# Runs as an s6-rc oneshot AFTER init-selkies-config (dependencies.d), because
-# that base oneshot seeds /config/.config/openbox/{autostart,menu.xml} from
-# /defaults on first boot only. Force-refresh autostart on EVERY start here so
-# an image update to /defaults/autostart always takes effect (menu.xml is
-# deliberately left as first-boot-only — see /defaults/menu.xml's own note).
-# -----------------------------------------------------------------------------
+# Runs after init-selkies-config, which seeds openbox's autostart and menu.xml
+# from /defaults on first boot only. The autostart is copied again on every
+# start so an image update reaches it; menu.xml stays first-boot-only so hand
+# edits survive.
 set -e
 
 log() { echo "[init-trialyard] $*"; }
@@ -28,17 +23,16 @@ chown -R "${PUID:-99}:${PGID:-100}" \
     "${CONFIG_HOME}" "/config/.local" "/config/.cache" \
     "/config/npm-global" "/config/go" 2>/dev/null || true
 
-# GPU diagnostics — logged once at boot so a failed GPU passthrough (wrong
-# --runtime, missing NVIDIA_VISIBLE_DEVICES) is visible in `docker logs`
-# instead of silently falling back to software rendering.
+# Without this a failed GPU passthrough (wrong --runtime, missing
+# NVIDIA_VISIBLE_DEVICES) falls back to software rendering without a word.
 if command -v nvidia-smi >/dev/null 2>&1; then
     if gpu_name=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null); then
         log "GPU detected: ${gpu_name}"
     else
-        log "WARNING: nvidia-smi is present but failed to query the GPU — check --runtime=nvidia and NVIDIA_VISIBLE_DEVICES on this container"
+        log "WARNING: nvidia-smi is present but failed to query the GPU; check --runtime=nvidia and NVIDIA_VISIBLE_DEVICES on this container"
     fi
 else
-    log "WARNING: nvidia-smi not found in PATH — GPU passthrough is not active for this container"
+    log "WARNING: nvidia-smi not found in PATH, GPU passthrough is not active for this container"
 fi
 
 log "init-trialyard done"

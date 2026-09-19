@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- TrialYard's openbox right-click menu. Seeded into
-     /config/.config/openbox/menu.xml on FIRST boot only (base image's
-     init-selkies-config: `if [[ ! -f "$CONF_DIR/menu.xml" ]]`) — edit this
-     file and it takes effect on a fresh /config; an existing /config keeps
-     whatever menu is already there (including hand edits jdp makes later). -->
+<!-- TrialYard's openbox right-click menu. The base image's init-selkies-config
+     copies it to /config/.config/openbox/menu.xml only when none exists, so a
+     change here reaches a fresh /config and an existing menu keeps its edits. -->
 
 <openbox_menu xmlns="http://openbox.org/"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
