@@ -91,7 +91,7 @@ This container is a full [Selkies](https://github.com/selkies-project/selkies) d
 
 ## 3. Why it exists
 
-A background test agent for [selkies-project/selkies#305](https://github.com/selkies-project/selkies/pull/305) reported back that it had "no browser or GPU on my box", while two machines with GPUs sat in the same house. The gap was not hardware, it was that nothing was standing ready to be used.
+Testing [selkies-project/selkies#305](https://github.com/selkies-project/selkies/pull/305) needed a browser and a GPU, and the box the tests ran on had neither, while two machines with GPUs sat in the same house. The gap was not hardware, it was that nothing was standing ready to be used.
 
 So something is. A headful click, a pointer lock, a hardware decode, a screenshot: all of them need a desktop that actually draws, and none of them are worth risking a production container over.
 
