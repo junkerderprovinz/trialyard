@@ -106,7 +106,7 @@ jobs:
       # amd64 only: Google Chrome ships no arm64 Linux build, so an arm64 image
       # would lack half of what the README promises.
       - name: Build and push
-        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: .
           platforms: linux/amd64
