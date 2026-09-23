@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/junkerderprovinz/trialyard/actions/workflows/build.yml"><img src="https://img.shields.io/github/actions/workflow/status/junkerderprovinz/trialyard/build.yml?branch=main&label=Build&style=for-the-badge&logo=githubactions&logoColor=white" alt="Build" height="36"></a>&nbsp;
-  <a href="https://github.com/selkies-project/selkies"><img src="https://img.shields.io/badge/Selkies-WebRTC-393939?style=for-the-badge&logo=webrtc&logoColor=white" alt="Selkies" height="36"></a>&nbsp;
+  <a href="https://github.com/selkies-project/selkies"><img src="https://img.shields.io/badge/Selkies-2.0-393939?style=for-the-badge" alt="Selkies" height="36"></a>&nbsp;
   <a href="https://www.nvidia.com"><img src="https://img.shields.io/badge/GPU-NVIDIA-76b900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA GPU" height="36"></a>&nbsp;
   <a href="templates/trialyard.xml"><img src="https://img.shields.io/badge/Unraid-Template-f15a2c?style=for-the-badge&logo=unraid&logoColor=white" alt="Unraid Template" height="36"></a>&nbsp;
   <a href="https://github.com/junkerderprovinz/trialyard/releases/latest"><img src="https://img.shields.io/github/v/release/junkerderprovinz/trialyard?style=for-the-badge&logo=github&logoColor=white&label=Release" alt="Release" height="36"></a>&nbsp;

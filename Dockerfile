@@ -11,8 +11,9 @@
 # template, which keeps the image vendor-neutral.
 #
 # The flavor is pinned to ubunturesolute, the one krusader, jdownloader and
-# handbrake ship, rather than :latest or the floating :dev tag.
-ARG BASE_TAG=ubunturesolute
+# handbrake ship, and to a digest, because a builder that already holds an older
+# ubunturesolute would otherwise keep using it.
+ARG BASE_TAG=ubunturesolute@sha256:6cfa54196b6e0dade64f5e51517fd12c4275ceda7519c0e18ad168cb4508c050
 FROM ghcr.io/linuxserver/baseimage-selkies:${BASE_TAG}
 
 LABEL maintainer="junkerderprovinz"
@@ -23,10 +24,9 @@ LABEL org.opencontainers.image.vendor="junkerderprovinz"
 # TITLE feeds the PWA manifest and SELKIES_UI_TITLE the web client's tab and
 # sidebar; this base needs both.
 #
-# The Selkies server enables basic auth by default, with well-known credentials
-# (ubuntu / mypasswd). With SELKIES_ENABLE_BASIC_AUTH=false there is no login
-# unless CUSTOM_USER and PASSWORD are set, and init-nologin strips empty values
-# before nginx reads them.
+# The Selkies server enables basic auth by default and will not start without a
+# password. With SELKIES_ENABLE_BASIC_AUTH=false there is no login unless
+# CUSTOM_USER and PASSWORD are set, which nginx then enforces.
 ENV TITLE="TrialYard" \
     SELKIES_UI_TITLE="TrialYard" \
     SELKIES_ENABLE_BASIC_AUTH="false"
@@ -145,7 +145,6 @@ RUN set -eux; \
 RUN chmod +x \
     /usr/local/bin/print-banner.sh \
     /usr/local/bin/chrome-launch \
-    /etc/s6-overlay/s6-rc.d/init-nologin/run \
     /etc/s6-overlay/s6-rc.d/init-trialyard/run \
     /etc/s6-overlay/s6-rc.d/svc-trialyard-ready/run \
     /defaults/autostart \
