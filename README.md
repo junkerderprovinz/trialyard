@@ -57,28 +57,15 @@ If it has earned a place on your server or computer, toss a coin to your knight:
 
 ## Table of Contents
 
-1. [What it is](#1-what-it-is)
-2. [Screenshots](#2-screenshots)
-3. [Why it exists](#3-why-it-exists)
-4. [The rule](#4-the-rule)
-5. [What is inside](#5-what-is-inside)
-6. [Things learned the hard way](#6-things-learned-the-hard-way)
-7. [Building and running it](#7-building-and-running-it)
-8. [Why this repo exists at all](#8-why-this-repo-exists-at-all)
-9. [How AI is used here](#9-how-ai-is-used-here)
-10. [Support this project](#10-support-this-project)
+1. [What it looks like](#1-what-it-looks-like)
+2. [What it does](#2-what-it-does)
+3. [Getting started](#3-getting-started)
+4. [How AI is used here](#4-how-ai-is-used-here)
+5. [Support this project](#5-support-this-project)
 
 <br>
 
-## 1. What it is
-
-A trial yard is the walled ground a smith keeps beside the forge: the place where a blade gets swung at something breakable, on purpose, before anyone carries it.
-
-This container is a full [Selkies](https://github.com/selkies-project/selkies) desktop with a real GPU, a real Firefox and a real Google Chrome, and a working toolchain. It runs permanently on its own address on the LAN, and it is where every test that needs a browser, a screen or a graphics card is run.
-
-<br>
-
-## 2. Screenshots
+## 1. What it looks like
 
 <p align="center">
   <img src=".github/assets/screenshots/desktop.png" alt="Google Chrome on the TrialYard desktop, in a browser tab" width="100%">
@@ -90,99 +77,42 @@ This container is a full [Selkies](https://github.com/selkies-project/selkies) d
 
 <br>
 
-## 3. Why it exists
+## 2. What it does
 
-Testing [selkies-project/selkies#305](https://github.com/selkies-project/selkies/pull/305) needed a browser and a GPU, and the box the tests ran on had neither, while two machines with GPUs sat in the same house. The gap was not hardware, it was that nothing was standing ready to be used.
+A trial yard is the walled ground a smith keeps beside the forge: the place where a blade gets swung at something breakable, on purpose, before anyone carries it.
 
-So something is. A headful click, a pointer lock, a hardware decode, a screenshot: all of them need a desktop that actually draws, and none of them are worth risking a production container over.
-
-<br>
-
-## 4. The rule
-
-**Every test runs here first.** No ad-hoc test containers.
-
-Only the thing under test gets a container of its own; the client that pokes at it is always TrialYard. Ad-hoc containers duplicate the setup and quietly step around the resource and isolation limits this one was given on purpose.
+- **A desktop that really draws.** A [Selkies](https://github.com/selkies-project/selkies) desktop in a browser tab, with a real Firefox and a real Google Chrome on it. Headful clicks, pointer lock and screenshots all work.
+- **A GPU and a toolchain.** An NVIDIA card through the nvidia runtime, plus Go, Node, Python, git, a C and C++ toolchain and Playwright's system dependencies.
+- **Always there.** It runs permanently on its own address on the LAN. Every test that needs a browser, a screen or a graphics card runs here, and only the thing under test gets a container of its own.
+- **Fenced in.** 4 CPUs and 6 GiB as a hard ceiling, and `/config` as its only mount, so it has no path to production data. `GOPATH` and the npm global prefix live in `/config` and survive a rebuild.
 
 <br>
 
-## 5. What is inside
+## 3. Getting started
 
-| | |
-|---|---|
-| Base | `ghcr.io/linuxserver/baseimage-selkies`, pinned tag |
-| GPU | RTX 4070 Ti SUPER, via `--runtime=nvidia` with `compute,video,utility` |
-| Browsers | Firefox and Google Chrome, both real windows on `DISPLAY=:1` |
-| Toolchain | Go, Node, Python, git, a C and C++ toolchain, Playwright's OS dependencies |
-| Network | `br0.20`, its own address, HTTPS WebUI on 3001, no port mapping |
-| Limits | 4 CPUs and 6 GiB, a hard ceiling rather than a reservation |
-| Persistence | `/config` only. `GOPATH` and the npm global prefix live there, so they survive a container rebuild |
-
-The mount list is short on purpose: the sandbox cannot reach production data, because it was never handed a path to it.
-
-<br>
-
-## 6. Things learned the hard way
-
-Each of these cost a diagnosis once. They are here so they cost nothing the second time.
-
-**Line endings.** Everything in this repo ends up inside a Linux container. An s6 run script checked out with CRLF fails as `bad interpreter: /usr/bin/with-contenv bash^M`, the service dies instantly, s6 restarts it, and the log fills with a line naming a file that plainly exists. `.gitattributes` pins LF for exactly this reason.
-
-**s6 oneshots need an `up` file.** Only `longrun` services get by with a bare `run`. Without the marker the first build died at `s6-rc-compile: fatal` and the container never started.
-
-**An empty desktop is indistinguishable from a broken one.** The right-click menu was built correctly and was entirely undiscoverable. The wallpaper now says out loud that the desktop has a right-click menu, because a user cannot be expected to guess at black.
-
-**Unraid labels come from Unraid, never from the image.** A container created by a raw `docker run` has no `net.unraid.docker.managed` label, and without it Unraid shows the container as an orphan and refuses to edit it, no matter what template file exists. Create and rebuild through the template, not by hand.
-
-**Check that limits actually applied.** `docker inspect` once reported `CpuQuota: 0, Memory: 0` while the template said `--cpus=4 --memory=6g`. A limit written down is not a limit in force.
-
-**Playwright starts a fresh browser profile every run.** Anything in `localStorage` is gone, which looks exactly like a bug in whatever you were testing.
-
-**`el.click()` from `page.evaluate()` is not a trusted gesture,** so popups are blocked. Use `page.mouse.click()` on the bounding box for anything that opens a window.
-
-**Never read GPU state from a fresh `docker exec` shell.** It does not inherit the session environment, so `glxinfo` reports `llvmpipe` and you go looking for a driver problem that is not there. Read `/proc/<session-pid>/environ` instead.
-
-<br>
-
-## 7. Building and running it
-
-Pull it:
+The compose button at the top downloads a ready file. Start it with:
 
 ```sh
-docker pull ghcr.io/junkerderprovinz/trialyard:latest
+docker compose up -d
 ```
 
-Or build it yourself:
+Then open `https://<this-host>:3001/` and accept the self-signed certificate once. Right-click the desktop for a terminal, Firefox or Google Chrome. Without an NVIDIA card, drop the `runtime` line and the two `NVIDIA_` variables from the file, and the desktop draws in software.
 
-```sh
-docker build -t ghcr.io/junkerderprovinz/trialyard:latest .
-```
-
-The container itself is created and rebuilt through its Unraid template
-([`templates/trialyard.xml`](templates/trialyard.xml)), never by a raw
-`docker run`. Copy it to
-`/boot/config/plugins/dockerMan/templates-user/my-TrialYard.xml` and rebuild:
+On Unraid, create and rebuild the container through its template, [`templates/trialyard.xml`](templates/trialyard.xml), and never by a raw `docker run`. Unraid only manages a container it created itself; anything else shows up as an orphan it refuses to edit. Copy the template to `/boot/config/plugins/dockerMan/templates-user/my-TrialYard.xml` and rebuild:
 
 ```sh
 php /usr/local/emhttp/plugins/dynamix.docker.manager/scripts/rebuild_container TrialYard
 ```
 
-<br>
+The image is `ghcr.io/junkerderprovinz/trialyard:latest`. To build it yourself:
 
-## 8. Why this repo exists at all
-
-It did not, until 2026-09-13. The source lived as a folder on the array, with no
-history and no diff, which is one careless overwrite away from being
-unreconstructible. A container image built from a state nobody can reach again
-cannot be inspected later, only rebuilt from scratch, and that lesson was
-already paid for once elsewhere.
-
-The folder on the server stays as the build context. This is where its history
-lives.
+```sh
+docker build -t ghcr.io/junkerderprovinz/trialyard:latest .
+```
 
 <br>
 
-## 9. How AI is used here
+## 4. How AI is used here
 
 One knight builds this, and AI is one of the tools I work with, the same way I work with an editor or a compiler. It helps me write code and documentation and it checks my work, and that saves me a good many evenings. It does not make the decisions, though. I read and understand everything before it ships, and if something here breaks, that is on me and not on the tool.
 
@@ -190,7 +120,7 @@ You do not have to take my word for it. The code is open and every release note 
 
 <br>
 
-## 10. Support this project
+## 5. Support this project
 
 Problems, wishes or suggestions? You're welcome to [open an issue](https://github.com/junkerderprovinz/trialyard/issues).
 
