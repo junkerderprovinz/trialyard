@@ -13,7 +13,7 @@
 # The flavor is pinned to ubunturesolute, the one krusader, jdownloader and
 # handbrake ship, and to a digest, because a builder that already holds an older
 # ubunturesolute would otherwise keep using it.
-ARG BASE_TAG=ubunturesolute@sha256:f5f62de1c88deea345cb95bd21efe64e67eeb47862ecceeb85808d8ec9ed19a4
+ARG BASE_TAG=ubunturesolute@sha256:9f3221922afff0ed9b451e39e13055446fd3f6d1964d1c6ee810dacdea8ad6bc
 FROM ghcr.io/linuxserver/baseimage-selkies:${BASE_TAG}
 
 LABEL maintainer="junkerderprovinz"
