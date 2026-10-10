@@ -29,7 +29,7 @@ const CLAIM = "Swing at it here.";
 const MARK = join(__dir, "..", "..", "assets", "trialyard.svg");
 
 const W = 1600, H = 500;
-const LH = 420, LW = 420;
+const LH = 400, LW = 400;
 const nameSize = 132, claimSize = 44, gap = 70, lineGap = 8;
 
 const THEMES = [
