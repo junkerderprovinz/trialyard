@@ -14,9 +14,13 @@
   "prConcurrentLimit": 6,
   "packageRules": [
     {
-      "description": "Dependabot updates the workflow pins in this repo",
+      "description": "GitHub Actions: auto-merge minor, patch and digest updates",
       "matchManagers": ["github-actions"],
-      "enabled": false
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "automergeType": "branch",
+      "commitMessagePrefix": "ci:",
+      "labels": ["github-actions"]
     }
   ]
 }
