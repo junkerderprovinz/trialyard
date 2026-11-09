@@ -11,26 +11,54 @@ on:
     paths-ignore:
       - "**/*.md"
       - ".github/assets/**"
+  # Weekly, to rebuild the newest release on fresh base images and packages.
+  schedule:
+    - cron: '0 5 * * 0'
   workflow_dispatch:
 
 permissions:
   contents: write   # release asset upload
   packages: write
 
+# A rebuild of the newest release runs apart from pushes, so neither cancels
+# the other.
 concurrency:
-  group: build-${{ github.ref }}
+  group: build-${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'rebuild' || github.ref }}
   cancel-in-progress: true
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}
 
 jobs:
+  # Rebuilds refresh the newest release, which is what people run, not the
+  # tip of main.
+  release:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.newest.outputs.tag }}
+    steps:
+      - name: Find the newest release
+        id: newest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release view -R "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          echo "rebuilding $tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: release
+    if: ${{ !failure() && !cancelled() }}
     name: Build and publish (amd64)
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.release.outputs.tag }}
 
       # The finished image is around 5 GB: two browsers plus a Go, Node and
       # Python toolchain on top of the Selkies base. A stock runner is tight
@@ -96,15 +124,15 @@ jobs:
           # The action adds latest to every semver tag unless the flavor turns that off.
           flavor: |
             latest=false
-          # `latest` is the newest released version; the tip of main answers to
-          # `edge`.
+          # `latest` is the newest released version, set by its tag build and by
+          # every rebuild of it, and the tip of main answers to `edge`.
           tags: |
-            type=sha,format=short
-            type=raw,value=edge,enable=${{ github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch }}
-            type=raw,value=latest,enable=${{ github.ref_type == 'tag' && steps.newest.outputs.is_newest == 'true' }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=sha,format=short,enable=${{ needs.release.outputs.tag == '' }}
+            type=raw,value=edge,enable=${{ github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch && needs.release.outputs.tag == '' }}
+            type=raw,value=latest,enable=${{ (github.ref_type == 'tag' && steps.newest.outputs.is_newest == 'true') || needs.release.outputs.tag != '' }}
+            type=semver,pattern={{version}},value=${{ needs.release.outputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release.outputs.tag }}
+            type=semver,pattern={{major}},value=${{ needs.release.outputs.tag }}
 
       # amd64 only: Google Chrome ships no arm64 Linux build, so an arm64 image
       # would lack half of what the README promises.
@@ -118,6 +146,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          no-cache: ${{ needs.release.outputs.tag != '' }}
           provenance: false
 
       # The README's download button points at
