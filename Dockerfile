@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.28
+# syntax=docker/dockerfile:1.29
 #
 # TrialYard: a permanent GPU-accelerated desktop on Selkies for the testing a
 # cloud sandbox cannot do, such as cross-browser checks and GPU work.
