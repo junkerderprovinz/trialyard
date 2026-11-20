@@ -92,6 +92,7 @@ ENV PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
 
 # The tarball is checked against the checksum go.dev's dl API publishes, so a
 # GO_VERSION bump needs no hash edit.
+# renovate: datasource=golang-version depName=go
 ARG GO_VERSION=1.26.0
 RUN set -eux; \
     arch="$(dpkg --print-architecture)"; \
