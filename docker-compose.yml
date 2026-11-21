@@ -7,7 +7,7 @@
 
 services:
   trialyard:
-    image: ghcr.io/junkerderprovinz/trialyard:latest
+    image: ghcr.io/junkerderprovinz/trialyard:latest@sha256:4ec626b2b3a5376a7d900b7b6c4cef90c29bf5e59dbe0497e0b7dbc1e6dcbc88
     container_name: TrialYard
 
     environment:
