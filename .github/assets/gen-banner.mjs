@@ -1,15 +1,15 @@
 /**
  * Generates the light and dark TrialYard banners, 1600x500, on the pattern of
- * glimstone's gen-banner.mjs: the mark on the left, the name in Bree Serif and
- * the claim in Lato. Text is turned into SVG paths with opentype.js so the
- * banner looks the same everywhere without a font.
+ * glimstone's gen-banner.mjs: the mark on the left, the name in Bree Serif Light
+ * and the claim in Bree Light. Text is turned into SVG paths with opentype.js so
+ * the banner looks the same everywhere without a font.
  *
- * Deps (global): opentype.js, @resvg/resvg-js. The fonts are downloaded once to
- * the temp dir.
+ * Deps (global): opentype.js, @resvg/resvg-js, and the house fonts as TTF in
+ * HOUSE_FONTS (default %LOCALAPPDATA%\halleluja-fonts).
  *
  *   node .github/assets/gen-banner.mjs
  */
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
@@ -37,20 +37,10 @@ const THEMES = [
   { suffix: "-dark", bg: "#0d1117", name: "#e6edf3", claim: "#9aa4ad" },
 ];
 
-async function loadFont(file, url) {
-  const p = join(tmpdir(), file);
-  if (!existsSync(p)) {
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(`font fetch ${r.status} for ${file}`);
-    writeFileSync(p, Buffer.from(await r.arrayBuffer()));
-  }
-  return opentype.parse(readFileSync(p));
-}
-
-const font = await loadFont("Haus-BreeSerif-Regular.ttf",
-  "https://github.com/google/fonts/raw/main/ofl/breeserif/BreeSerif-Regular.ttf");
-const claimFont = await loadFont("Haus-Lato-Regular.ttf",
-  "https://github.com/google/fonts/raw/main/ofl/lato/Lato-Regular.ttf");
+// The house typeface is licensed, so it is read from a local folder and never committed.
+const fonts = process.env.HOUSE_FONTS ?? join(process.env.LOCALAPPDATA ?? tmpdir(), "halleluja-fonts");
+const font = opentype.parse(readFileSync(join(fonts, "bree-serif-light.ttf")).buffer);
+const claimFont = opentype.parse(readFileSync(join(fonts, "bree-light.ttf")).buffer);
 
 const startX = 165;
 const LX = startX, LY = (H - LH) / 2;
